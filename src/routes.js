@@ -8,6 +8,7 @@ import { showResult } from "./controllers/showResult.js";
 
 const router = Router();
 
+router.get('/', helloWorld);
 router.post('/poll', newPoll);
 router.get('/poll', pollList);
 router.post('/choice', addChoice);
