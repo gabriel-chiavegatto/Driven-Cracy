@@ -38,6 +38,6 @@ async function newPoll(req, res) {
 
         await db.collection("polls").insertOne(poll);
         res.sendStatus(201);
-    } catch (error) { console.log(error); res.sendStatus(422) }
+    } catch (error) { console.log(error); res.status(422).send(error) }
 }
 export { newPoll }
