@@ -10,11 +10,13 @@ async function voteOnChoice(req,res){
             return res.sendStatus(404);
         }
 
+        // validar se já expirou a enquete
+
         const vote = {
             createdAt: hour,
             choiceId: ObjectId(id)
         }
-        await db.collection('votes').insertOne({vote})
+        await db.collection('votes').insertOne(vote)
 
         res.sendStatus(201)
     }catch(error){
