@@ -5,6 +5,7 @@ import { addChoice } from "./controllers/addChoice.js";
 import { showPollChoices } from "./controllers/showPollChoices.js";
 import { voteOnChoice } from "./controllers/voteOnChoice.js";
 import { showResult } from "./controllers/showResult.js";
+import { helloWorld } from "./controllers/helloWord.js";
 
 const router = Router();
 
