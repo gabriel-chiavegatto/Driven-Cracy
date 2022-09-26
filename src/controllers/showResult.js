@@ -10,26 +10,19 @@ async function showResult(req, res) {
         const choicesId = choices.map(element => {
             return element._id
         });
-        let topRatedId;
-        let numberOfvotes = 0;
-        const arrays = await choicesId.forEach( async element => {
-            const arrayVotes = await db.collection('votes').find({ choiceId: element}).toArray();
-            console.log(element,arrayVotes);
-            if(arrayVotes.length >= numberOfvotes){
-                topRatedId = element;
-                numberOfvotes = arrayVotes.length
-                console.log(topRatedId,numberOfvotes)
-            }
-        });
-        console.log(arrays, "here")
-        const topRatedChoice = await db.collection('choices').findOne({_id: ObjectId(topRatedId)})
+
+        const rated = await findTheTopRatedChoice(choicesId)
+
+        console.log(rated, "here")
+
+        const topRatedChoice = await db.collection('choices').findOne({ _id: ObjectId(rated.resultOfRated) })
         const resultPoll = {
             _id: id,
             title: poll.title,
             expireAt: poll.expireAt,
             result: {
                 title: topRatedChoice.title,
-                votes: numberOfvotes
+                votes: rated.numberOfvotes
             }
         }
 
@@ -40,3 +33,42 @@ async function showResult(req, res) {
     }
 
 } export { showResult }
+
+async function findTheTopRatedChoice(choicesId) {
+    try {
+        let topRatedId;
+        let numberOfvotes = 0;
+        const choiceLength = choicesId.length;
+
+        for (let i = 0; i < choicesId.length; i++) {
+            const arrayVotes = await db.collection('votes').find({ choiceId: choicesId[i] }).toArray();
+            console.log(choicesId[i], arrayVotes);
+            if (arrayVotes.length >= numberOfvotes) {
+                topRatedId = choicesId[i];
+                numberOfvotes = arrayVotes.length;
+            }
+        }
+        const resultOfRated = topRatedId;
+        
+        return { resultOfRated, numberOfvotes }
+
+        // const topRatedArray = await choicesId.map(async element => {
+        //     try {
+        //         const arrayVotes = await db.collection('votes').find({ choiceId: element }).toArray();
+        //         console.log(element, arrayVotes);
+        //         if (arrayVotes.length >= numberOfvotes) {
+        //             topRatedId = element;
+        //             numberOfvotes = arrayVotes.length;
+        //             return topRatedId
+        //         } else { return topRatedId }
+
+        //     } catch (error) {
+        //         return "Mongo ERROR"
+        //     }
+        // });
+
+    } catch (error) {
+        console.log("error on findTheTopRatedChoice", error)
+    }
+
+}
