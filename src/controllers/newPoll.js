@@ -11,7 +11,7 @@ async function newPoll(req, res) {
 
         const pollSchema = joi.object({
             title: joi.string().required(),
-            expireAt: joi.date().format('YYYY-MM-DD').utc()
+            expireAt: joi.date().format('YYYY-MM-DD HH:mm').utc()
         })
         const validation = pollSchema.validate(poll);
         if (validation.error) {
